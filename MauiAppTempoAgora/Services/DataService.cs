@@ -1,5 +1,6 @@
 ﻿using MauiAppTempoAgora.Models;
 using Newtonsoft.Json.Linq;
+using System.Net;
 
 namespace MauiAppTempoAgora.Services
 {
@@ -7,15 +8,30 @@ namespace MauiAppTempoAgora.Services
     {
         public static async Task<Tempo?> GetPrevisao(string cidade)
         {
+            if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
+            {
+                throw new Exception("Sem conexão com a internet.");
+            }
             Tempo? t = null;
 
             string chave = "7ba260bbffd9bb0cad06ca02f2842409";
             string url = $"https://api.openweathermap.org/data/2.5/weather?" +
-                $"q={cidade}&units=metric&appid={chave}";
+                $"q={cidade}&units=metric&lang=pt_br&appid={chave}";
 
             using (HttpClient client = new HttpClient())
             {
                 HttpResponseMessage resp = await client.GetAsync(url);
+
+                if (resp.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new Exception("Cidade não encontrada.");
+                }
+
+                // ❌ Outros erros
+                if (!resp.IsSuccessStatusCode)
+                {
+                    throw new Exception("Erro ao buscar dados do clima.");
+                }
 
                 if (resp.IsSuccessStatusCode)
                 {

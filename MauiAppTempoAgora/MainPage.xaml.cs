@@ -22,12 +22,15 @@ namespace MauiAppTempoAgora
                     if (t != null)
                     {
                         string dados_previsao = "";
-                        dados_previsao = $"Latitude: {t.lat}\n" +
+                        dados_previsao = $"Clima: {t.description}\n" +
+                            $"Latitude: {t.lat}\n" +
                             $"Longitude:{t.lon}\n" +
                             $"Nascer do Sol:{t.sunrise}\n" +
                             $"Por do Sol:{t.sunset}\n" +
                             $"Temp Máx:{t.temp_max}\n" +
-                            $"Temp Min:{t.temp_min}\n";
+                            $"Temp Min:{t.temp_min}\n" +
+                            $"Vento: {t.speed} m/s\n" +
+                            $"Visibilidade: {t.visibility} m\n" ;
 
                         lbl_res.Text = dados_previsao;
                         string mapa = $"https://embed.windy.com/embed.html?" +
